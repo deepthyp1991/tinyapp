@@ -13,11 +13,13 @@
  
   <main style="margin: 1em;">
     <h3>My URLs</h3>
+  
     <table class="table">
       <thead>
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +27,14 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
-          </tr>
+            <td>
+              <form class="form-inline" action="/urls/<%= url %>" method="GET">
+                <div class="form-group mb-2">
+                  <button type="Edit" class="btn btn-primary">Delete</button>
+                </div>
+              </form>
+            </td>
+         </tr>
         <% } %>
       </tbody>
     </table>
