@@ -36,7 +36,7 @@ const addUser = (obj, id, email, password) => {
   obj[id] = {"id": id, 'email': email, 'password': password};
 };
 
-const isEmailExist = (obj, email) => {
+const emailExist = (obj, email) => {
   const keys = Object.keys(obj);
   for (let k of keys) {
     if (obj[k]['email'] === email) {
@@ -68,14 +68,8 @@ const urlsForUser = (id) => {
   return res;
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
-});
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.get("/urls", (req, res) => {
@@ -147,7 +141,7 @@ app.post("/urls/:shortURL/Update", (req, res) => {
     res.redirect('/urls/');
   } else {
     res.status(403);
-    res.send('<h2>You don\'t have the right to update this URL<h2>');
+    res.send('<h2>You don\'t have the permission to update this URL<h2>');
   }
 });
 
@@ -155,7 +149,7 @@ app.post("/urls/:shortURL/Update", (req, res) => {
 app.post("/login", (req, res) => {
   let user = null;
   let id = idByEmail(users, req.body.email);
-  if (!isEmailExist(users,req.body.email) || users[id].password !== req.body.password) {
+  if (!emailExist(users,req.body.email) || users[id].password !== req.body.password) {
     res.status(403);
     res.send("<h2> Email Doesn't exist or wrong password</h2>");
   } else if (users[id].email === req.body.email && users[id].password === req.body.password) {
@@ -175,7 +169,7 @@ app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
-  if (email === "" || password === "" || isEmailExist(users, email)) {
+  if (email === "" || password === "" || emailExist(users, email)) {
     res.status(404);
     res.send("404 NOT FOUND");
   } else {
