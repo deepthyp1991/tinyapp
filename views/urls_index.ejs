@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
@@ -9,33 +10,50 @@
   <title>TinyApp</title>
 </head>
 <body>
-  <%- include('partials/_header') %>
- 
+
+</body> <%- include('partials/_header') %>
+
   <main style="margin: 1em;">
     <h3>My URLs</h3>
-  
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">Short URL</th>
-          <th scope="col">Long URL</th>
-          <th scope="col">Edit</th>
-          <th scope= 'col'>Delete</th>
-        </tr>
-      </thead>
+
+    </main>
       <tbody>
-        <% for(let url in urls) { %>
-          <tr>
-            <td><%= url %></td>
-            <td><%= urls[url] %></td>
-            <td>
-              <a href="/urls/<%= url %>" class="btn btn-outline-primary">Edit</a>
-             </td>
-            <td>
-              <form method="POST" action="/urls/<%= url %>/delete?_method=DELETE"><button type="submit" class="btn btn-outline-danger">Delete</button>
-            </td>
-         </tr>
-        <% } %>
+        <%if (user) {%>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Short URL</th>
+              <th scope="col">Long URL</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+            <% for(let url in urls) { %>
+              <%if (urls[url]['userID'] === user['id']) {%>
+            <tr>
+              <th scope="col"><%= url %></th>
+              <th scope="col"><%= urls[url]['longURL'] %></th>
+              <th scope="col">
+              <form class="form-inline" action="/urls/<%= url %>" method="GET">
+                <div class="form-group mb-2">
+                  <button type="Edit" class="btn btn-primary">Edit</button>
+                </div>
+              </form>
+              </th>
+              <th scope="col">
+                <form class="form-inline" action="/urls/<%= url %>/delete" method="POST">
+                  <div class="form-group mb-2">
+                    <button type="Delete" class="btn btn-primary">Delete</button>
+                  </div>
+                </form>
+              </th>
+            </tr>
+            <% } %>
+          <% } %>
+        </thead>
+        </table>
+        <% } else { %>
+          <h2> You should Login or Register first</h2>
+          <% } %>
       </tbody>
     </table>
   </main>
