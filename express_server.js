@@ -171,19 +171,19 @@ app.post("/logout", (req, res) => {
 });
 
 
-// app.post("/register", (req, res) => {
-//   const id = generateRandomString();
-//   const email = req.body.email;
-//   const password = req.body.password;
-//   if (email === "" || password === "" || isEmailExist(users, email)) {
-//     res.status(404);
-//     res.send("404 NOT FOUND");
-//   } else {
-//     addUser(users, id, email, password);
-//     res.cookie('userID', id);
-//     res.redirect('/urls');
-//   }
-// });
+app.post("/register", (req, res) => {
+  const id = generateRandomString();
+  const email = req.body.email;
+  const password = req.body.password;
+  if (email === "" || password === "" || isEmailExist(users, email)) {
+    res.status(404);
+    res.send("404 NOT FOUND");
+  } else {
+    addUser(users, id, email, password);
+    res.cookie('userID', id);
+    res.redirect('/urls');
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
