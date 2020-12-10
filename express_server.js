@@ -3,6 +3,7 @@ const app = express();
 const PORT = 8080; 
 const bodyParser = require("body-parser");
 const cookies = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookies());
@@ -13,23 +14,23 @@ const urlDatabase = {
   "9sm5xK": {longURL: "http://www.google.com", userID: "iut675"}
 };
 
-// Our users database
+// Our  database
 const users = {
   "890uyt": {
     id: "890uyt",
     email: "user1@example.com",
-    password: "qwer"
+    password: bcrypt.hashSync("qwer", 10)
   },
   "iut675": {
     id: "iut675",
     email: "user2@example.com",
-    password: "tyunr"
+    password:  bcrypt.hashSync("df456", 10)
   }
 };
 
 
 const generateRandomString = () => {
-  return Math.random().toString(36).substr(2, 6);
+  return Math.random().toString(36).substr(2, 6) + Math.random().toString(36).substr(2, 6);
 };
 
 const addUser = (obj, id, email, password) => {
@@ -67,6 +68,16 @@ const urlsForUser = (id) => {
   }
   return res;
 };
+
+const userByEmail = function(obj, email) {
+  const keys = Object.keys(obj);
+  for (let k of keys) {
+    if(obj[k]['email'] === email) {
+      return true;
+    }
+  }
+  return false;
+}
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -147,12 +158,13 @@ app.post("/urls/:shortURL/Update", (req, res) => {
 
 
 app.post("/login", (req, res) => {
-  let user = null;
+  let password = req.body.password;
+  let user = userByEmail(users,req.body.email);
   let id = idByEmail(users, req.body.email);
-  if (!emailExist(users,req.body.email) || users[id].password !== req.body.password) {
+  if (!emailExist(users,req.body.email) || !bcrypt.compare(user.password, password)) {
     res.status(403);
     res.send("<h2> Email Doesn't exist or wrong password</h2>");
-  } else if (users[id].email === req.body.email && users[id].password === req.body.password) {
+  } else if (users[id].email === req.body.email && bcrypt.compare(user.password, password)) {
     user = users[id];
     res.cookie('userID', user.id);
     res.redirect('/urls');
@@ -168,10 +180,10 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
-  const password = req.body.password;
+  const password = bcrypt.hashSync(req.body.password, 10);
   if (email === "" || password === "" || emailExist(users, email)) {
     res.status(404);
-    res.send("404 NOT FOUND");
+    res.send("404 NOT FOUND");  
   } else {
     addUser(users, id, email, password);
     res.cookie('userID', id);
