@@ -1,3 +1,4 @@
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session')
@@ -81,10 +82,6 @@ app.post("/register", (req, res) => {
     res.status(400).send("This email exists already!")
   } else {
     res.status(400).send("Email or password invalid");
-
-
-
-
   }
 });
 
@@ -129,7 +126,7 @@ app.get("/urls", (req, res) => {
   } else {
     const templateVars = { 
       user : null,
-      msg : "You must Register or login first"
+      msg : "you must register or log in first"
      };
     res.render("message",templateVars);
   }
@@ -180,7 +177,7 @@ app.post("/urls", (req, res) => {
     longURL : req.body.longURL,
     userID : req.session['user_id']
     }
-    res.redirect(`/urls/${shortURL}`); 
+    res.redirect('/urls/'); 
   } else {
     const templateVars = { 
       user : users[req.session["user_id"]],
