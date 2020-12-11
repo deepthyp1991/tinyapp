@@ -4,23 +4,22 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-<% if (!user) { %>
-      <div class="navbar-nav">
-      <a class="nav-item nav-link" href="/login">Login</a>
-      <a class="nav-item nav-link" href="/register">Register</a>
-      </div>
-    <% } else { %>
-      <p class="nav-item nav-link"> Logged in as <%= user["email"] %></p>
-      <form class="form-inline" action="/logout" method="POST">
-        <button type="submit" class="nav-item nav-link">Logout</button>
-        </form>
-      <% } %>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
+      
     </div>
+    <% if (!user) { %> 
+    <a href="/login" style="margin-right: 30px">Login</a>
+    <a href="/register">Register</a>
+    <% } else { %>
+      
+      <form action="/logout" method="POST">
+        <label> Logged In As: <%= user.email %> !</label>
+        <button type="submit">Logout</button>
+      </form>
+   <% } %>
   </nav>
 </header>
